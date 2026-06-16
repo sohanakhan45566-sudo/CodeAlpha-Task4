@@ -1,5 +1,5 @@
 # =====================================
-# Stage 1: Build Stage (optimized)
+# Stage 1: Build Stage
 # =====================================
 FROM alpine:3.19 AS builder
 
@@ -19,7 +19,7 @@ RUN mkdir -p /var/www/html \
 COPY src/ /var/www/html/
 
 # =====================================
-# Stage 2: Production Stage (final image)
+# Stage 2: Production Stage
 # =====================================
 FROM alpine:3.19
 
@@ -31,8 +31,12 @@ RUN apk add --no-cache \
     tini \
     && rm -rf /var/cache/apk/*
 
-# Create non-root user for security
-RUN adduser -D -g '' -s /bin/sh nginxuser \
+# Create non-root user AND directories FIRST
+RUN mkdir -p /var/lib/nginx \
+    /var/log/nginx \
+    /var/cache/nginx \
+    /run/nginx \
+    && adduser -D -g '' -s /bin/sh nginxuser \
     && chown -R nginxuser:nginxuser /var/lib/nginx \
     && chown -R nginxuser:nginxuser /var/log/nginx \
     && chown -R nginxuser:nginxuser /var/cache/nginx \
