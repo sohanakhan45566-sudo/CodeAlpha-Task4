@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 CodeAlpha DevOps Task 4 - Docker Web Server</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🐳 Docker Web Server</h1>
+            <h2>CodeAlpha DevOps Internship - Task 4</h2>
+            
+            <div class="badge-container">
+                <span class="badge success">✅ Container Running</span>
+                <span class="badge info">🚀 Nginx</span>
+                <span class="badge warning">🔐 Secure</span>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>📦 Container ID</h3>
+                    <p id="container-id">Loading...</p>
+                </div>
+                <div class="info-item">
+                    <h3>📅 Deployed</h3>
+                    <p id="deploy-time">Loading...</p>
+                </div>
+                <div class="info-item">
+                    <h3>🏷️ Image</h3>
+                    <p>codealpha-task4:latest</p>
+                </div>
+            </div>
+            
+            <div class="tech-stack">
+                <h3>🛠️ Technology Stack</h3>
+                <div class="tech-tags">
+                    <span>🐳 Docker</span>
+                    <span>⚡ Nginx</span>
+                    <span>📦 Alpine Linux</span>
+                    <span>🔒 Security Hardened</span>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>Built with ❤️ by Soehana Akbar</p>
+                <p class="small">DevOps Intern | CodeAlpha</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Get container ID from environment
+        fetch('/container-id')
+            .then(res => res.text())
+            .then(data => {
+                document.getElementById('container-id').textContent = data;
+            })
+            .catch(() => {
+                document.getElementById('container-id').textContent = 'Container ID';
+            });
+        
+        // Set deployment time
+        document.getElementById('deploy-time').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>

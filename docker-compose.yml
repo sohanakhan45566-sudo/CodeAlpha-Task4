@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: codealpha-task4:latest
+    container_name: codealpha-web
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Karachi
+    volumes:
+      - app-logs:/var/log/nginx
+      - app-cache:/var/cache/nginx
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    labels:
+      - "com.codealpha.project=task4"
+      - "com.codealpha.version=1.0"
+
+volumes:
+  app-logs:
+    driver: local
+  app-cache:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

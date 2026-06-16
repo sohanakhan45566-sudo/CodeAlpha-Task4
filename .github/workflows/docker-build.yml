@@ -1,0 +1,66 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  IMAGE_NAME: codealpha-task4
+  DOCKER_REGISTRY: docker.io
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    
+    - name: Build and test Docker image
+      run: |
+        docker build -t $IMAGE_NAME:test .
+        docker run --name test-container -d -p 8080:8080 $IMAGE_NAME:test
+        sleep 5
+        curl -f http://localhost:8080/health || exit 1
+        docker stop test-container
+        docker rm test-container
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:latest
+          ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Scan for vulnerabilities
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:latest
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload vulnerability scan results
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: 'trivy-results.sarif'
+    
+    - name: Deploy to staging (Simulation)
+      run: |
+        echo "🚀 Deploying to staging environment..."
+        echo "📦 Image: ${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:latest"
+        echo "✅ Deployment simulation complete!"
