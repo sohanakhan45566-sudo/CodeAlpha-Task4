@@ -70,14 +70,22 @@ docker inspect web | grep -A 5 Health
 # Test health endpoint
 curl http://localhost:8080/health
 📸 Screenshots
-Web Server Running
-https://screenshots/web-server.png
+## 📸 Screenshots
 
-Health Check
-https://screenshots/health-check.png
+### Web Server Running
+![Web Server](screenshots/web-server.png)
 
-Docker Desktop
-https://screenshots/docker-desktop.png
+### Health Check
+![Health Check](screenshots/health-check.png)
+
+### Docker Desktop
+![Docker Desktop](screenshots/docker-desktop.png)
+
+### CI/CD Pipeline Success
+![CI/CD Pipeline](screenshots/pipeline-success.png)
+
+### Docker Hub Image
+![Docker Hub](screenshots/docker-hub.png)
 
 🔐 Security Best Practices
 ✅ Non-root user in container
